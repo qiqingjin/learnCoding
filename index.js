@@ -6,4 +6,6 @@ require('./index.less');
 //require('./src/unique_array');
 //require('./src/object_create');
 //require('./src/json_stringify');
-require('./src/sort');
+//require('./src/chunk');
+require('./src/recursion');
+//require('./src/sort');
