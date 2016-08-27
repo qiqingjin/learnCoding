@@ -49,6 +49,7 @@ console.log(`cacheFibonacci run ${countCacheFibo} times, result is ${cacheResult
 let flag = false;
 const chunkFibonacci = function(n){
 	countChunkFibo++;
+	console.log('countChunkFibo',countChunkFibo);
 	if(n <= 2){
 		if(n === 1) flag = true;
 		return 1;
@@ -62,17 +63,23 @@ const chunkFibonacci = function(n){
 function addTask(fun, delay, ...args){
     if (typeof fun == 'function'){
         const argu = args;
-        let result = 0; 
-        const f = (function () {
-            fun.apply(null, argu);
-        });
-        return setTimeout(f, delay);
-    }  
-    return setTimeout(fun, delay);
-}  
+        let result = 0;
+        let flag = false;
+        const f = function(){
+            result = fun.apply(null, argu);
+            console.log('result',result);
+            flag = true;
+        };
+        const timer = setTimeout(f, delay);
+        while(flag === true){
+        	clearTimeout(timer);
+        	return result;
+        }
+    }
+}
 
 const chunkFiboLog = log(chunkFibonacci); 
 const chunkResult = chunkFiboLog(6);
 
-if(flag === true) console.log(`chunkFibonacci run ${countChunkFibo} times, result is ${chunkResult}`);*/
+while(flag === true) console.log(`chunkFibonacci run ${countChunkFibo} times, result is ${chunkResult}`);*/
 

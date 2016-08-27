@@ -7,5 +7,6 @@ require('./index.less');
 //require('./src/object_create');
 //require('./src/json_stringify');
 //require('./src/chunk');
-require('./src/recursion');
+//require('./src/recursion');
+//require('./src/pubsub');
 //require('./src/sort');
