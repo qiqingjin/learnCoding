@@ -9,4 +9,7 @@ require('./index.less');
 //require('./src/chunk');
 //require('./src/recursion');
 //require('./src/pubsub');
-//require('./src/sort');
+//require('./src/tagged_template');
+//require('./src/sort.js');
+//require('./src/imp_req');
+require('./src/reg_exp');
