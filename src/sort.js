@@ -133,3 +133,10 @@ console.log('quickRes', quickRes);
 console.log('selectRes', selectRes);
 
 console.log(arr);
+
+function qsort(arr){
+  if(arr.length <= 1) return arr;
+  var c = arr[0], rest = arr.slice(1);
+  return qsort(rest.filter(item => item < c))
+    .concat([c]).concat(qsort(rest.filter(item => item >= c)));
+}

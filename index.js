@@ -12,4 +12,4 @@ require('./index.less');
 //require('./src/tagged_template');
 //require('./src/sort.js');
 //require('./src/imp_req');
-require('./src/reg_exp');
+//require('./src/reg_exp');
