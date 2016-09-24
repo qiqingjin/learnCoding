@@ -14,4 +14,5 @@ require('./index.less');
 //require('./src/imp_req');
 //require('./src/reg_exp');
 //require('./src/run_script');
-require('./src/js_besides_js');
+//require('./src/js_besides_js');
+//require('./src/least_num');
