@@ -16,4 +16,4 @@ require('./index.less');
 //require('./src/run_script');
 //require('./src/js_besides_js');
 //require('./src/least_num');
-require('./src/deep_copy');
+//require('./src/deep_copy');
