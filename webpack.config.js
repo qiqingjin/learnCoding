@@ -32,7 +32,7 @@ var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
         loaders:[
          {
             test: /\.less$/,loader: 'style-loader!css-loader!less-loader'
-        },
+          },
          {
               test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'
          },
@@ -40,8 +40,17 @@ var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
              test: /\.js$/, loader: 'babel-loader', query:{
                  presets:['es2015']
              }
-         }
+         }/*,
+         {
+              test: /\.html$/,
+              loader: "html-loader"
+          }*/
          ]
      },
-     resolve: { extensions: ['', '.js'] }
+     resolve: { 
+      extensions: ['', '.js'],
+      alias: {
+        'vue$': 'vue/dist/vue.common.js'
+      }
+    }
  };

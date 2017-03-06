@@ -4,15 +4,21 @@
   "description": "coding",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.15.3",
+    "babel": "^6.5.2",
+    "babel-core": "^6.13.2",
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.13.2",
-    "babel-core": "^6.13.2",
     "css-loader": "^0.23.1",
-    "less-loader": "^2.2.3",
+    "file-loader": "^0.10.1",
+    "html-loader": "^0.4.5",
     "less": "^2.7.1",
-    "webpack": "^1.13.2",
-    "babel": "^6.5.2",
-    "style-loader": "^0.13.1"
+    "less-loader": "^2.2.3",
+    "lodash": "^4.17.4",
+    "raw-loader": "^0.5.1",
+    "style-loader": "^0.13.1",
+    "vue": "^2.2.1",
+    "webpack": "^1.13.2"
   },
   "devDependencies": {
     "webpack": "^1.13.2",
@@ -21,6 +27,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Cynethia Lee",
-  "license": "ISC"
+  "author": "Claire Lee",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:qiqingjin/learnCoding.git"
+  }
 }
