@@ -17,4 +17,5 @@ require('./index.less');
 //require('./src/js_besides_js');
 //require('./src/least_num');
 //require('./src/deep_copy');
-require('./src/vue/start');
+//require('./src/vue/start');
+require('./src/youDontKnowJS/this');
