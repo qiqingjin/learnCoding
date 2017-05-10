@@ -4,7 +4,7 @@ var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
   module.exports = {
      //插件项
       plugins:[
-          commonsPlugin, 
+          commonsPlugin,
           new webpack.DefinePlugin({
             'process.env.NODE_ENV': '"development"'
           }),
