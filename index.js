@@ -19,4 +19,4 @@ require('./index.less');
 //require('./src/deep_copy');
 //require('./src/vue/start');
 //require('./src/youDontKnowJS/this');
-require('./src/youDontKnowJS/object');
+//require('./src/ArcGis/map');
