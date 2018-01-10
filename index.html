@@ -1,55 +1,172 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>learn coding</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>Formatter Function</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/3.23/dijit/themes/soria/soria.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.23/dojox/layout/resources/ExpandoPane.css">
     <link rel="stylesheet" href="https://js.arcgis.com/3.23/esri/css/esri.css">
+    <style>
+      html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+    </style>
+
     <script src="https://js.arcgis.com/3.23/"></script>
-    <script src="./src/ArcGis/map.js"></script>
-</head>
-<body>
-    <!-- <div class="cursor_with">我是一个鼠标跟随效果</div> -->
-    <!-- <div class="template"></div> -->
+    <script>
+      // infotemplate formatting functions need to be in the global scope to work
+      var map, compare, compare2;
 
-    <!-- <div class="father">
-        <div class="son">子元素的padding和margin百分比都是基于父元素的width，你说怪不怪</div>
-    </div> -->
+      require([
+        "esri/map",
+        "esri/InfoTemplate",
+        "esri/layers/FeatureLayer",
+        "esri/renderers/SimpleRenderer",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "dojo/dom",
+        "dojo/number",
+        "dojo/on",
+        "dojo/parser",
+        "esri/Color",
+        "dijit/layout/BorderContainer",
+        "dijit/layout/ContentPane",
+        "dojox/layout/ExpandoPane",
+        "dojo/domReady!"
+      ],
+        function (
+          Map, InfoTemplate, FeatureLayer, SimpleRenderer, SimpleFillSymbol,
+          SimpleLineSymbol, dom, number, on, parser, Color
+      ) {
 
-    <!-- <img id="base64"/>
-    <div id="content">js存入png中</div> -->
+          parser.parse();
 
-    <!-- <div class="pos">测试position属性</div> -->
+          map = new Map("mapDiv", {
+            basemap: "streets",
+            center: [-86.796, 47.13],
+            zoom: 7
+          });
 
-    <!-- <div id="first">
-        <span id="elId">Message: {{isOk ? msg : warn}}</span><br/>
-        <span>Reversed Message: {{reversedMessage}}</span>
-    </div> -->
+          var infoTemplate = new InfoTemplate();
+          infoTemplate.setTitle("Population in ${NAME}");
+          infoTemplate.setContent("<b>2007 :D: </b>${POP2007:compare}<br/>" +
+                                  "<b>2007 density: </b>${POP07_SQMI:compare}<br/><br/>" +
+                                  "<b>2000: </b>${POP2000:NumberFormat}<br/>" +
+                                  "<b>2000 density: </b>${POP00_SQMI:NumberFormat}");
 
-    <!-- <div id="watch-example">
-      <p>
-        Ask a yes/no question:
-        <input v-model="question">
-      </p>
-      <p>{{ answer }}</p>
-    </div> -->
+          var counties = new FeatureLayer("https://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Census_USA/MapServer/3", {
+            mode: FeatureLayer.MODE_SNAPSHOT,
+            infoTemplate: infoTemplate,
+            outFields: [
+              "NAME", "POP2000", "POP2007", "POP00_SQMI",
+              "POP07_SQMI"
+            ]
+          });
 
-    <!-- <div id="class-example">
-        <p v-bind:class="classCtrl">hello world</p>
-    </div> -->
+          counties.setDefinitionExpression("STATE_NAME = 'Michigan'");
 
-    <!-- <div id="if-example">
-        <template v-if="isOk">
-          <h1>Title</h1>
-          <p>Paragraph 1</p>
-          <p>Paragraph 2</p>
-        </template>
-    </div> -->
-    <div id="map"></div>
+          //apply a renderer
+          var symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+              new Color([255, 255, 255, 0.35]), 1),
+            new Color([109, 146, 155, 0.35]));
+          counties.setRenderer(new SimpleRenderer(symbol));
 
-    <!-- <script src="http://vuejs.org/js/vue.js"></script> -->
+          map.addLayer(counties);
 
-    <script src="./bundle/common.js"></script>
-    <script src="./bundle/index.bundle.js"></script>
-</body>
+          on(dom.byId("chkT1"), "click", changeInfoTemplate);
+          on(dom.byId("chkT2"), "click", changeInfoTemplate);
+
+          dom.byId("chkT1").checked = true;
+
+          compare = function (value, key, data) {
+            console.log('value', value);
+            console.log('key', key);
+            console.log('data', data);
+            var result = "", diff, pctChange;
+
+            switch (key) {
+              case "POP2007":
+                result = value > data.POP2000 ? "images/up.png" : "images/down.png";
+                diff = data.POP2007 - data.POP2000;
+                pctChange = (diff * 100) / data.POP2000;
+                break;
+
+              case "POP07_SQMI":
+                result = value > data.POP00_SQMI ? "images/up.png" : "images/down.png";
+                diff = data.POP07_SQMI - data.POP00_SQMI;
+                pctChange = (diff * 100) / data.POP00_SQMI;
+                break;
+            }
+
+            return number.format(value) +
+                   "&nbsp;&nbsp; <img src='" + result + "'/>" +
+                   "&nbsp;&nbsp;<span style='color: " +
+                   (pctChange < 0 ? "red" : "green") + ";'>"
+                     + number.format(pctChange, { places: 3 }) +
+                   "%</span>";
+          };
+
+          compare2 = function (value, key, data) {
+            var diff = data.POP2007 - data.POP2000;
+            var result = diff > 0 ? "images/up.png" : "images/down.png";
+            var pctChange = (diff * 100) / data.POP2000;
+
+            return "<img src='" + result + "'/>" +
+                   "&nbsp;&nbsp;<span style='color: " +
+                   (pctChange < 0 ? "red" : "green") + ";'>"
+                     + number.format(pctChange, { places: 3 }) +
+                   "%</span>";
+          };
+
+          function changeInfoTemplate () {
+
+            map.infoWindow.hide();
+
+            var t1Checked = dom.byId("chkT1").checked;
+            var t2Checked = dom.byId("chkT2").checked;
+            var templateContent = "";
+
+            if (t1Checked) {
+              templateContent = "<b>2007: </b>${POP2007:compare}<br/>" +
+                                "<b>2007 density: </b>${POP07_SQMI:compare}<br/><br/>" +
+                                "<b>2000: </b>${POP2000:NumberFormat}<br/>" +
+                                "<b>2000 density: </b>${POP00_SQMI:NumberFormat}";
+            }
+            else if (t2Checked) {
+              templateContent = "<b>2007: </b>${POP2007}<br/>" +
+                                "<b>2007 density: </b>${POP07_SQMI}<br/><br/>" +
+                                "<b>2000: </b>${POP2000:NumberFormat}<br/>" +
+                                "<b>2000 density: </b>${POP00_SQMI:NumberFormat}<br/><br/>" +
+                                "Diff: ${DIFF:compare2}";
+            }
+
+            counties.infoTemplate.setContent(templateContent);
+          }
+        });
+    </script>
+  </head>
+  <body class="soria">
+    <div data-dojo-type="dijit/layout/BorderContainer"
+         data-dojo-props="design:'headline', gutters:true"
+         style="width: 100%; height: 100%; margin: 0;">
+
+      <div data-dojo-type="dojox/layout/ExpandoPane"
+           data-dojo-props="duration:300, title:'Details', region:'left', maxWidth:'220px', easeIn:'easing.linear', easeOut:'easing.linear'"
+           style="width:220px;">
+         <p>
+          Click a county to view the population change between 2000 and 2007.<br/> <br/>
+          <b>Change the info template:</b> Template 1 displays the percentage growth (or decline) in population. The values are color-coded green for population increase and red for decline in population. Template 2 creates a new calculated field called diff that displays the population difference. <br/>
+          <input id="chkT1" name="template" type="radio"/>
+          <label for="chkT1">Template 1</label>
+          <br />
+          <input id="chkT2" name="template" type="radio"/>
+          <label for="chkT2">Template 2</label>
+        </p>
+      </div>
+      <div id="mapDiv" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
+    </div>
+  </body>
+
 </html>
