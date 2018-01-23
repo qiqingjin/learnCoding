@@ -1,56 +1,58 @@
-var webpack = require('webpack');
+/*
+* @Author: yuey9507
+* @Date:   2018-01-22 18:10:23
+* @Last Modified by:   yuey9507
+* @Last Modified time: 2018-01-23 11:12:23
+*/
+const path = require('path');
+const root = __dirname;
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
-  module.exports = {
-     //插件项
-      plugins:[
-          commonsPlugin,
-          new webpack.DefinePlugin({
-            'process.env.NODE_ENV': '"development"'
-          }),
-          new webpack.HotModuleReplacementPlugin()
-      ],
-      devServer: {
-        hot: true,
-        inline: true
-      },
-     //页面入口文件配置
-     entry: {
-         index : './index.js'
-     },
-     //入口文件输出配置
-     output:{
-         path:'./bundle/',
-         filename: '[name].bundle.js',
-         publicPath: '/bundle'
-     },
-     // externals: {     //排除构建文件外
-     // 'react': 'React'
-     // },
-     module: {
-         //加载器配置
-        loaders:[
-         {
-            test: /\.less$/,loader: 'style-loader!css-loader!less-loader'
-          },
-         {
-              test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'
-         },
-         {
-             test: /\.js$/, loader: 'babel-loader', query:{
-                 presets:['es2015']
-             }
-         }/*,
-         {
-              test: /\.html$/,
-              loader: "html-loader"
-          }*/
-         ]
-     },
-     resolve: { 
-      extensions: ['', '.js'],
-      alias: {
-        'vue$': 'vue/dist/vue.common.js'
-      }
-    }
- };
+module.exports = {
+  // 入口文件
+  entry: [
+    'react-hot-loader/patch', // 激活HMR
+    'webpack-dev-server/client',
+    'webpack/hot/only-dev-server',
+    path.resolve(root, 'src/ReactUI/main.js')
+  ],
+  // 出口文件
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(root, 'dist'),
+    publicPath: '/'
+  },
+  // loaders
+  module: {
+    loaders: [
+        {
+            test: /\.jsx?$/,
+            loader: 'babel',
+            exclude: /node_modules/,
+            query: {
+                presets: ['react', 'es2015']
+            }
+        }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'React Demo',
+      template: path.resolve(root, 'template.html')
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"development"'
+    }),
+    new webpack.HotModuleReplacementPlugin(), // 热替换插件
+    new webpack.NamedModulesPlugin() // 执行热替换时打印模块名字
+  ],
+  devServer: {
+    hot: true, // 激活服务器的HMR
+    inline: true,
+    //contentBase: path.resolve(root, 'dist'),
+    //publicPath: '/',
+    port: 666
+    //historyApiFallback: true
+  }
+}
