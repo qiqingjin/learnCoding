@@ -2,12 +2,13 @@
 * @Author: yuey9507
 * @Date:   2018-01-22 18:10:23
 * @Last Modified by:   yuey9507
-* @Last Modified time: 2018-01-23 11:12:23
+* @Last Modified time: 2018-01-25 14:59:16
 */
 const path = require('path');
 const root = __dirname;
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
 
 module.exports = {
   // 入口文件
@@ -19,10 +20,14 @@ module.exports = {
   ],
   // 出口文件
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(root, 'dist'),
     publicPath: '/'
   },
+  /*externals: {
+    'react': 'React',
+    'react-dom': 'ReactDOM'
+  },*/
   // loaders
   module: {
     loaders: [
@@ -45,13 +50,15 @@ module.exports = {
       'process.env.NODE_ENV': '"development"'
     }),
     new webpack.HotModuleReplacementPlugin(), // 热替换插件
-    new webpack.NamedModulesPlugin() // 执行热替换时打印模块名字
+    /*new webpack.NamedModulesPlugin(),*/ // 执行热替换时打印模块名字
+    commonsPlugin
   ],
   devServer: {
     hot: true, // 激活服务器的HMR
     inline: true,
     //contentBase: path.resolve(root, 'dist'),
     //publicPath: '/',
+    clientLogLevel: "none",
     port: 666
     //historyApiFallback: true
   }
