@@ -2,7 +2,7 @@
 * @Author: yuey9507
 * @Date:   2018-01-22 18:10:23
 * @Last Modified by:   yuey9507
-* @Last Modified time: 2018-01-25 14:59:16
+* @Last Modified time: 2018-01-30 17:28:35
 */
 const path = require('path');
 const root = __dirname;
@@ -38,7 +38,16 @@ module.exports = {
             query: {
                 presets: ['react', 'es2015']
             }
-        }
+        },
+        {
+            test: /\.(s)?css$/,
+            loader: 'style-loader!css-loader!sass-loader'
+        },
+        /*{ 
+            test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+            loader: 'url-loader?limit=100000' 
+        }*/
+        { test: /\.(eot|woff|woff2|svg|ttf)([\?]?.*)$/, loader: "file-loader" }
     ]
   },
   plugins: [

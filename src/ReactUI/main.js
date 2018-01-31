@@ -2,12 +2,12 @@
 * @Author: yuey9507
 * @Date:   2018-01-22 18:06:04
 * @Last Modified by:   yuey9507
-* @Last Modified time: 2018-01-26 16:57:22
+* @Last Modified time: 2018-01-30 17:16:01
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import App from './SemanticUIReactApp.js';
+import App from './OnsenApp.js';
 
 const render = (App) => {
   ReactDOM.render(
@@ -15,7 +15,7 @@ const render = (App) => {
       		<App />
     </AppContainer>,
     document.getElementById('app')
-  )
+  );
 };
 
 render(App);
