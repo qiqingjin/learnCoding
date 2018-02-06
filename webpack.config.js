@@ -2,13 +2,15 @@
 * @Author: yuey9507
 * @Date:   2018-01-22 18:10:23
 * @Last Modified by:   yuey9507
-* @Last Modified time: 2018-01-30 17:28:35
+* @Last Modified time: 2018-02-06 15:48:42
 */
 const path = require('path');
 const root = __dirname;
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
+const WebpackRTLPlugin = require('webpack-rtl-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
   // 入口文件
@@ -41,7 +43,7 @@ module.exports = {
         },
         {
             test: /\.(s)?css$/,
-            loader: 'style-loader!css-loader!sass-loader'
+            loader: ExtractTextPlugin.extract('style-loader', 'css-loader', 'sass-loader')
         },
         /*{ 
             test: /\.(png|woff|woff2|eot|ttf|svg)$/,
@@ -51,16 +53,24 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
+    /*new HtmlWebpackPlugin({
       title: 'React Demo',
       template: path.resolve(root, 'template.html')
-    }),
+    }),*/
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"development"'
     }),
     new webpack.HotModuleReplacementPlugin(), // 热替换插件
     /*new webpack.NamedModulesPlugin(),*/ // 执行热替换时打印模块名字
-    commonsPlugin
+    new ExtractTextPlugin("style.css"),
+    commonsPlugin,
+    new WebpackRTLPlugin({
+      filename: 'style.rtl.css',
+      options: {},
+      plugins: [],
+      diffOnly: false,
+      minify: true,
+    })
   ],
   devServer: {
     hot: true, // 激活服务器的HMR
